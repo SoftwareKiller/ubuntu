@@ -1,34 +1,54 @@
-#include<unistd.h>
-#include<signal.h>
 #include<stdio.h>
+#include<signal.h>
+#include<unistd.h>
 
-void printsigset(sigset_t *set)
+void sig_alrm(int s)
 {
-    int i = 0;
-    for(; i<32; ++i)
-    {
-        if( sigismember( set,i ) ){
-            putchar('1');
-        }
-        else{
-            putchar('0');
-        }
-    }
-    puts("");
+    //printf("signal:%d,兄弟，你弄不死我\n",s);
+}
+
+unsigned int mysleep(unsigned int nsecs)
+{
+    struct sigaction new, old;
+    sigset_t newmask, oldmask, suspmask;
+    unsigned int unslept = 0;
+    new.sa_handler = sig_alrm;
+    sigemptyset(&new.sa_mask);
+    new.sa_flags = 0;
+    sigaction(SIGALRM, &new, &old);
+    //阻塞
+    sigemptyset(&newmask);
+    sigaddset(&newmask,SIGALRM);
+    sigprocmask(SIG_BLOCK, &newmask, &oldmask);
+    alarm(nsecs);
+
+    suspmask = oldmask;
+    sigdelset(&suspmask, SIGALRM);
+
+    sigsuspend(&suspmask);
+
+    unslept = alarm(0);
+    sigaction(SIGALRM, &old, NULL);
+    sigprocmask(SIG_SETMASK, &oldmask, NULL);
+    return unslept;
 }
 
 int main()
 {
-    sigset_t s,p;
-    sigemptyset(&s);
-    sigaddset(&s, SIGINT);
-    sigprocmask(SIG_BLOCK, &s, NULL);
-    while(1)
-    {
-        sigpending(&p);
-        printsigset(&p);
-        sleep(1);
-    }
+    mysleep(5);
+    printf("5 seconds passed\n");
+
+
+    //signal(2,hander);
+
+    //alarm(5);
+
+   // while(1)
+   // {
+   //     printf("I am a Running proggram\n");
+   //     sleep(1);
+   // }
+
     return 0;
 }
 
