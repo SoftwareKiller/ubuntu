@@ -47,7 +47,7 @@ public:
             else
             {
                 data_.push_front(data);
-                dict_.insert({data.first, data});
+                dict_.insert(std::make_pair(data.first, data));
                 ++length;
             }
         }
@@ -65,6 +65,7 @@ private:
     }
     bool moveData(Node tmp)
     {
+        bool flag = false;
         for(std::list<Node>::iterator it = data_.begin(); it != data_.end(); ++it)
         {
             if(it->first == tmp.first)
@@ -74,9 +75,11 @@ private:
                 tmp.second = it->second;
                 data_.erase(it);
                 data_.push_front(tmp);
+                flag = true;
                 break;
             }
         }
+        return flag;
     }
 
 private:
