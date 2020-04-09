@@ -408,7 +408,7 @@ bool CAsyncLog::createNewFile(const char* pszLogFileName)
 bool CAsyncLog::writeToFile(const std::string& data)
 {
     //为了防止长文件一次写不完，分批写入
-    std:: string strLocal(data);
+    /*std:: string strLocal(data);
     int ret = 0;
     while(true)
     {
@@ -421,6 +421,22 @@ bool CAsyncLog::writeToFile(const std::string& data)
         }
 
         if(strLocal.empty())
+            break;
+    }*/
+
+    int32_t written = 0;
+    int32_t remain = data.length();
+    while(remain > 0)
+    {
+        written = fwrite(data.c_str() + (data.length() - remain), 1, remain, m_hLogFile);
+        if(written < 0)
+            return false;
+        else if(written <= remain)
+        {
+            remain -= written;
+        }
+
+        if(remain <= 0)
             break;
     }
 
