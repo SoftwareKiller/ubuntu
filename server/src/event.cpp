@@ -1,5 +1,6 @@
 #include "event.h"
 #include <cstring>
+#include <ctime>
 
 Event::Event(const char* ip, unsigned short port):
     epollfd_(epoll_create(1024)),
@@ -85,8 +86,16 @@ void Event::read_event(int fd)
     {
         std::cout << "recv client data, data length is : " << ret << "data is :" << buf << std::endl;
         char outbuf[512] = { 0 };
-        const char* hello = "<h1> hello </h1>";
-        snprintf(outbuf, sizeof(outbuf), "HTTP/1.0 200 OK\n Content-Length:%lu\n\n%s", strlen(hello), hello);
+
+        time_t now = time(nullptr);
+
+        tm servertime;
+        localtime_r(&now, &servertime);
+        char response[128] = { 0 };
+        snprintf(response, sizeof(response), "<h1>[%04d-%02d-%02d %02d:%02d:%02d]</h1>",
+                 servertime.tm_year+1900, servertime.tm_mon+1, servertime.tm_mday, servertime.tm_hour,
+                 servertime.tm_min, servertime.tm_sec);
+        snprintf(outbuf, sizeof(outbuf), "HTTP/1.0 200 OK\n Content-Length:%lu\n\n%s", strlen(response), response);
         int remain = strlen(outbuf);
         int written = 0;
         while(remain > 0)
