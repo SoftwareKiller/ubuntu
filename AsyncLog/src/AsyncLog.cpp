@@ -497,7 +497,7 @@ void CAsyncLog::writeThreadProc()
             m_listLinesToWrite.pop_front();
         }
 
-        std::cout << strLine << std::endl;
+        //std::cout << strLine << std::endl;
 
 #ifdef _WIN32
         OutputDebugStringA(strLine.c_str());
