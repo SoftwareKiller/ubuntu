@@ -121,6 +121,7 @@ void Event::CanelClient(int fd)
             break;
         }
     }
+    close(fd);
 }
 
 bool Event::newConnect()
