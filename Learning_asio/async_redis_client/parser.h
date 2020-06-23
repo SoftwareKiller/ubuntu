@@ -36,7 +36,7 @@ class ArrayItem : public ReplyItem
     };
 
 public:
-    ArrayItem() : ReplyItem(), status_(AI_STATUS::AI_LENGTH)
+    ArrayItem() : status_(AI_STATUS::AI_LENGTH)
     {
     }
 
