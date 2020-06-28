@@ -6,9 +6,9 @@ using namespace std;
 
 int reverse(int x)
 {
-    bool flag = x >= 0 ? true : false;
+    //bool flag = x >= 0 ? true : false;
 
-    x = abs(x);
+    //x = abs(x);
     int ret = 0;
     int bit = 0;
     while(x)
@@ -21,8 +21,8 @@ int reverse(int x)
         ++bit;
     }
 
-    if(!flag)
-        ret = 0 - ret;
+    //if(!flag)
+    //    ret = 0 - ret;
     if(ret > INT_MAX || ret < INT_MIN)
         return 0;
 
