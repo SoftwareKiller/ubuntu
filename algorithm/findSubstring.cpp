@@ -23,7 +23,7 @@ vector<int> findSubstring(string s, vector<string>& v)
     {
         string sub = s.substr(i, step);
         auto it = hash.find(sub);
-        if (it != hash.end())
+        if (it != hash.end() && ((right - start) >= step * v.size())) //稍微加个剪枝
         {
             res[it->first]++;
             if (!flag)
