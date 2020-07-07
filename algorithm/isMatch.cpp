@@ -167,22 +167,48 @@ bool isMatch(string s, string p)
     return dp[m][n];
 }
 
+bool isMatch2(string s, string p)
+{
+    s = " " + s;
+    p = " " + p;
+
+    int m = s.length(), n = p.length();
+    vector<vector<bool>> dp(m+1, vector<bool>(n+1, false));
+    dp[0][0] = true;
+
+    for(int i = 1; i <= m; ++i)
+    {
+        for(int j = 1; j <= n; ++j)
+        {
+            if(s[i-1] == p[j-1] || p[j-1] == '?' )
+                dp[i][j] = dp[i-1][j-1];
+            else if(p[j-1] == '*')
+            {
+                //dp[i-1][j]表示为空串
+                dp[i][j] = dp[i-1][j] || dp[i][j-1];
+            }
+        }
+    }
+
+    return dp[m][n];
+}
+
 int main()
 {
-    string s{"aa"};
-    string p{".*"};
-    printResult(isMatch(s, p));
-    s = "aab";
-    p = "c*a*b";
-    printResult(isMatch(s, p));
+    string s{""};
+    string p{"*"};
+    printResult(isMatch2(s, p));
+    s = "adceb";
+    p = "a*b";
+    printResult(isMatch2(s, p));
     s = "aaaa";
-    p = "a*";
-    printResult(isMatch(s, p));
-    s = "mississippi";
-    p = "mis*is*p*.";
-    printResult(isMatch(s, p));
-    s = "aaaaabc";
-    p = "c*b*a*bc";
-    printResult(isMatch(s, p));
+    p = "a";
+    printResult(isMatch2(s, p));
+    s = "cb";
+    p = "?a";
+    printResult(isMatch2(s, p));
+    s = "acdcb";
+    p = "a*c?b";
+    printResult(isMatch2(s, p));
 }
 
