@@ -6,6 +6,7 @@ using namespace std;
 void push(vector<int>& v, vector<vector<int> >& m, int left, int right, int low, int high);
 
 vector<int> printMatrix(vector<vector<int> > matrix) {
+    if(matrix.empty()) return {};
     vector<int> ret;
     int left = 0, right = matrix[0].size() - 1;
     int low = 0, high = matrix.size() - 1;
