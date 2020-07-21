@@ -6,6 +6,7 @@
 
 
 typedef std::pair<int, int> Node;
+//hash存值需要遍历链表才能删除，可以直接存指针或迭代器
 class lru
 {
 public:
@@ -89,6 +90,58 @@ private:
     std::unordered_map<int, Node> dict_;
 };
 
+class fast_lru
+{
+public:
+    fast_lru(size_t cap = 100) : capacity_(cap)
+    {}
+    ~fast_lru() = default;
+
+    int get(int k)
+    {
+        auto it = hash_.find(k);
+        if(it == hash_.end())
+            return -1;
+
+        Node newpos{k, it->second->second};
+        data_.erase(it->second);
+        data_.emplace_front(std::move(newpos));
+        hash_[k] = data_.begin();
+        return data_.front().second;
+    }
+
+    void put(Node newNode)
+    {
+        int k = newNode.first;
+        auto it = hash_.find(k);
+        if(it != hash_.end())
+        {
+            data_.erase(it->second);
+            data_.push_front(std::move(newNode));
+            hash_[k] = data_.begin();
+        }
+        else
+        {
+            if(data_.size() == capacity_)
+            {
+                hash_.erase(data_.back().first);
+                data_.pop_back();
+            }
+            data_.push_front(std::move(newNode));
+            hash_.insert(make_pair(k, data_.begin()));
+        }
+    }
+
+    size_t size()
+    {
+        return data_.size();
+    }
+private:
+    const size_t capacity_ = 100;
+    std::list<Node> data_;
+    std::unordered_map<int, std::list<Node>::iterator> hash_;
+};
+
 int main()
 {
     using namespace std;
@@ -97,7 +150,7 @@ int main()
     Node data3{4, 5}; 
     Node data4{2, 11}; 
     Node data5{9, 11}; 
-    lru cache;
+    fast_lru cache;
     cache.put(data1);
     cout << "lru size: " << cache.size() << " key = 8, value = " << cache.get(data1.first) << endl;
     cache.put(data2);
