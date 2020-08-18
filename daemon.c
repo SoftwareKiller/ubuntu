@@ -46,6 +46,34 @@ void mydaemon()
     dup2(fd0, 2);
 }
 
+void deamon_run() {
+    int pid;
+    signal(SIGCHLD, SIG_IGN);
+
+    pid = fork();
+    if(pid < 0) {
+        perror("fork error\n");
+        exit(-1);
+    }
+    else if(pid > 0) {
+        exit(0);
+    }
+
+    setsid();
+
+    int fd;
+    fd = open("/dev/null", O_RDWR, 0);
+    if(fd != -1)
+    {
+        dup2(fd, STDIN_FILENO);
+        dup2(fd, STDOUT_FILENO);
+        dup2(fd, STDERR_FILENO);
+    }
+
+    if(fd > 2)
+        close(fd);
+}
+
 int main()
 {
     mydaemon();
