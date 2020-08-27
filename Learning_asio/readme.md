@@ -19,7 +19,7 @@ yum install -y asio-devel
 
 示例：
 ```sh
-cp asio-1.18.0 http
+cp -r asio-1.18.0 http
 cd http/build
 cmake ..
 ```
