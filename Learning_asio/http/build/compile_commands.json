@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/zym/cpp/asio/net/d1/build/src",
+  "command": "/usr/bin/c++   -DASIO_STANDALONE -DNDEBUG -I/home/zym/cpp/asio/net/d1/asio-1.18.0/include   -std=c++0x -g -Wall -O0 -Wno-unused-variable -pthread -D_GLIBCXX_USE_CXX11_ABI=0 -D_WIN32_WINNT=0x0501   -std=gnu++11 -o CMakeFiles/server.dir/main.cpp.o -c /home/zym/cpp/asio/net/d1/src/main.cpp",
+  "file": "/home/zym/cpp/asio/net/d1/src/main.cpp"
+}
+]
