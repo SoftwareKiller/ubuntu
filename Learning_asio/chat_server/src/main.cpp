@@ -3,6 +3,8 @@
 #include <windows.h>
 #else
 #include <signal.h>
+#include <sys/types.h>
+#include <dirent.h>
 #endif
 #include <cstdlib>
 
@@ -15,6 +17,7 @@
 #include "../net/EventLoop.h"
 #include "../chatserver/HttpServer.h"
 #include "../utils/DaemonRun.h"
+#include "base/Singleton.h"
 
 #ifdef _WIN32
 BOOL WINAPI ConsoleHandler(DWORD CtrlType) {
@@ -37,7 +40,7 @@ void prog_exit(int signo)
 	std::cout << "program recv signal [" << signo << "] to exit." << std::endl;
 
 	//Singleton<MonitorServer>::Instance().uninit();
-	//Singleton<HttpServer>::Instance().uninit();
+	Singleton<HttpServer>::Instance().uninit();
 	//Singleton<ChatServer>::Instance().uninit();
 	//g_mainLoop.quit();
 
@@ -80,8 +83,31 @@ int main(int argc, char* argv[])
 #else
 	CConfigFileReader config("etc/chatserver.conf");
 #endif
+
 	std::string logFileFullPath;
-	const char* logfilepath = config.GetConfigName("logfiledir");
+    const char* logfilepath = config.GetConfigName("logfiledir");
+
+#ifndef _WIN32
+    if (logfilepath == NULL)
+    {
+        LOG_FATAL("logdir is not set in config file");
+        return 1;
+    }
+
+    //如果log目录不存在则创建之
+    DIR* dp = opendir(logfilepath);
+    if (dp == NULL)
+    {
+        if (mkdir(logfilepath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != 0)
+        {
+            LOG_FATAL("create base dir error, %s , errno: %d, %s", logfilepath, errno, strerror(errno));
+            return 1;
+        }
+    }
+    closedir(dp);
+
+    logFileFullPath = logfilepath;
+#endif
 	logFileFullPath = logfilepath;
 	const char* logfilename = config.GetConfigName("logfilename");
 	logFileFullPath += logfilename;
@@ -93,8 +119,7 @@ int main(int argc, char* argv[])
 	LOG_INFO("+                   Chat Start                +");
 	LOG_INFO("+++++++++++++++++++++++++++++++++++++++++++++++");
 
-	HttpServer server;
-	server.init(20000);
+    Singleton<HttpServer>::Instance().init(20000);
 	
 	net::EventLoop ep;
 
