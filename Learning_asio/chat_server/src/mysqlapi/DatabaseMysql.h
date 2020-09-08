@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include <errmsg.h>
+#include "errmsg.h"
 #include "QueryResult.h"
 
 #define MAX_QUERY_LEN 1024

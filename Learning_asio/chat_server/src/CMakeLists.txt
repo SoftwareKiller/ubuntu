@@ -1,7 +1,7 @@
 project (chat)
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall -g")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -O0 -Wno-unused-variable -pthread -Wall -g")
 ENDIF()
 
 include_directories(

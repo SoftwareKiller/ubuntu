@@ -20,7 +20,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 	#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267")
 else()
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/opt/mysql/include_linux)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/opt/mysql/include_linux)
     link_directories(${CMAKE_CURRENT_SOURCE_DIR}/opt/mysql/lib)
 endif()
 

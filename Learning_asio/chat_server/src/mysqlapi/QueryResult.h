@@ -5,7 +5,7 @@
 #include <windows.h>
 #endif
 
-#include <mysql.h>
+#include "mysql.h"
 #include <cstdint>
 #include <vector>
 #include <map>

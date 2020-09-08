@@ -1,4 +1,5 @@
 #include "DatabaseMysql.h"
+#include "../base/AsyncLogging.h"
 #include <fstream>
 #include <stdarg.h>
 #include <string.h>
@@ -37,6 +38,9 @@ bool CDatabaseMysql::initialize(const std::string& host, const std::string& user
     m_Mysql = mysql_init(m_Mysql);
     m_Mysql = mysql_real_connect(m_Mysql, host.c_str(), user.c_str(), pwd.c_str(), dbname.c_str(), 0, NULL, 0);
 
+    if(m_Mysql == nullptr) {
+        LOG_FATAL("%d", mysql_errno(m_Mysql));
+    }
     //ClearStoredResults();
 
     //LOGI << "mysql info: host=" << host << ", user=" << user << ", password=" << pwd << ", dbname=" << dbname;

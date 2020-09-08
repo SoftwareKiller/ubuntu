@@ -102,6 +102,7 @@ CMysqlManager::~CMysqlManager(void)
 
 }
 
+#include <iostream>
 bool CMysqlManager::init(const char* host, const char* user, const char* pwd, const char* dbname)
 {
 	m_strHost = host;

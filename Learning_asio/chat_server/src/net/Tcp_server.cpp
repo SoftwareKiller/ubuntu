@@ -53,7 +53,7 @@ void TcpServer::Accept() {
 	auto connection = make_shared<TcpConnection>(get_ioc_pool().get_io_context(), session_mgr_, acceptor_->local_endpoint());
 	acceptor_->async_accept(connection->fd(), [connection, this](asio::error_code ec) {
 		if (ec) {
-			LOG_ERROR("accept error:%s", ec.message());
+			LOG_ERROR("accept error:%s", ec.message().c_str());
 			acceptor_->close();
 			return;
 		}

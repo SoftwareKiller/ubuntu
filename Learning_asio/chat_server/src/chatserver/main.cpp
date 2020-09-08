@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include "../utils/DaemonRun.h"
+#include "mysql.h"
 #endif
 #include <cstdlib>
 
@@ -89,8 +90,24 @@ int main(int argc, char* argv[])
 #endif
 	std::string logFileFullPath;
 	const char* logfilepath = config.GetConfigName("logfiledir");
-	logFileFullPath = logfilepath;
+    if(logfilepath == nullptr) {
+        LOG_FATAL("logdir is not set in config file");
+        return 1;
+    }
 	const char* logfilename = config.GetConfigName("logfilename");
+
+#ifndef _WIN32
+    DIR* dp = opendir(logfilepath);
+    if(dp == nullptr) {
+        if(mkdir(logfilepath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != 0) {
+            LOG_FATAL("create base dir errir, %s, errno: %d, %s", logfilepath, errno, strerror(errno));
+            return 1;
+        }
+    }
+    closedir(dp);
+#endif
+
+	logFileFullPath = logfilepath;
 	logFileFullPath += logfilename;
 
 	CAsyncLog::init(logFileFullPath.c_str());
@@ -105,7 +122,9 @@ int main(int argc, char* argv[])
 	const char* dbpassword = config.GetConfigName("dbpassword");
 	const char* dbname = config.GetConfigName("dbname");
 
-	if (!Singleton<CMysqlManager>::Instance().init(dbserver, dbuser, dbpassword, dbname)) {
+    CMysqlManager handle;
+	//if (!Singleton<CMysqlManager>::Instance().init(dbserver, dbuser, dbpassword, dbname)) {
+    if(!handle.init(dbserver, dbuser, dbpassword, dbname)) {
 		LOG_FATAL("Init mysql failed, please check your database config.");
 	}
 	else {
@@ -116,6 +135,7 @@ int main(int argc, char* argv[])
 	{
 		LOG_FATAL("Init UserManager failed, please check your database config..............");
 	}
+    
 
 	Singleton<ChatServer>::Instance().init(20000);
 	Singleton<HttpServer>::Instance().init(8888);
