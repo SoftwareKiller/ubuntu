@@ -30,6 +30,10 @@ public:
 
 private:
 	bool process(const std::shared_ptr<TcpConnection>& conn, const std::string& url, const std::string& param);
+	void makeupResponse(const std::string& input, std::string& output);
+
+	void onRegisterResponse(const std::string& data, const std::shared_ptr<TcpConnection>& conn);
+	void onLoginResponse(const std::string& data, const std::shared_ptr<TcpConnection>& conn);
 
 private:
 	std::weak_ptr<TcpConnection> m_tempConn;

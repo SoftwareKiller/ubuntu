@@ -3,6 +3,7 @@
 #include <string.h>
 #include <vector>
 #include "StringUtil.h"
+#include "../utils/URLEncodeUtil.h"
 
 #define MAX_URL_LENGTH 2048
 
@@ -16,6 +17,9 @@ void http_session::onRead(const std::shared_ptr<TcpConnection>& conn, Buffer* pB
 	string inbuf;
 
 	inbuf.append(pBuffer->peek(), pBuffer->readableBytes());
+
+	LOG_INFO("request:%s", pBuffer->peek());
+	//LOG_DEBUG_BIN((unsigned char*)pBuffer->peek(), pBuffer->readableBytes());
 
 	if (inbuf.length() <= 4)
 		return;
@@ -59,7 +63,14 @@ void http_session::onRead(const std::shared_ptr<TcpConnection>& conn, Buffer* pB
 	if (!process(conn, url, param))
 		LOG_ERROR("handle http request error, from: %s, request: %s", conn->peerEp().address().to_string().c_str(), pBuffer->retrieveAllAsString().c_str());
 
-	conn->OnClose();
+	//conn->OnClose();
+}
+
+void http_session::send(const char* data, size_t length) {
+	if (!m_tempConn.lock()) {
+		std::shared_ptr<TcpConnection> conn = m_tempConn.lock();
+		conn->send(data, length);
+	}
 }
 
 bool http_session::process(const std::shared_ptr<TcpConnection>& conn, const std::string& url, const std::string& param) {
@@ -71,6 +82,23 @@ bool http_session::process(const std::shared_ptr<TcpConnection>& conn, const std
 		conn->send(response);
 		return true;
 	}
+	else if (url == "/register.do") {
+		onRegisterResponse(param, conn);
+	}
 
 	return false;
+}
+
+void http_session::makeupResponse(const std::string& input, std::string& output) {
+	std::ostringstream os;
+	os << "HTTP/1.1 200 OK\r\nContent-Type:text/html\r\nContent-Length:"
+		<< input.length() << "\r\n\r\n" << input;
+
+	output = os.str();
+}
+
+void http_session::onRegisterResponse(const std::string& data, const std::shared_ptr<TcpConnection>& conn) {
+	string retData;
+	string decodeData;
+	URLEncodeUtil::decode(data, decodeData);
 }

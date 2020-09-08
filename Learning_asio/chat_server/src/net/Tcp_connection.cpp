@@ -29,7 +29,7 @@ TcpConnection::TcpConnection(asio::io_context& io, Session_Mgr& session_mrg, con
 
 TcpConnection::~TcpConnection()
 {
-	LOG_DEBUG("TcpConnection::dtor:%lld", connection_id_);
+	LOG_INFO("TcpConnection::dtor:%lld", connection_id_);
 }
 
 void TcpConnection::start() {
@@ -62,44 +62,32 @@ void TcpConnection::send(const string& message) {
 		});
 }
 
+void TcpConnection::send(const char* data, size_t len) {
+	if (state_ == kConnected) {
+		string message(static_cast<const char*>(data), len);
+		send(message);
+	}
+}
+
 void TcpConnection::do_read() {
 	auto p = shared_from_this();
 
 	LOG_INFO("connection start recive");
 
 	socket_.async_read_some(asio::buffer(inputBuffer_.peek(), inputBuffer_.writableBytes()), [p, this](const asio::error_code& err, size_t len) {
-		if (err) {
-			LOG_ERROR("recv error: %s", err.message().c_str());
-			OnClose();
-			return;
-		}
+			if (err) {
+				LOG_ERROR("recv error: %s", err.message().c_str());
+				OnClose();
+				return;
+			}
 
-		inputBuffer_.produce(len);
+			inputBuffer_.produce(len);
 
-		LOG_INFO("buffer length : %d, input:%d", inputBuffer_.readable(), len);
+			LOG_INFO("buffer length : %d, input:%d", inputBuffer_.readable(), len);
 
-		if (messageCallback_ == nullptr)
-			return;
-		messageCallback_(shared_from_this(), &inputBuffer_, Timestamp::now());
-
-		//outputBuffer_.append("HTTP/1.1 200 OK\r\n\r\n<html><h1>chat_server,start</h1></html>");
-		
-		//do_send();
-		//asio::async_write(socket_, asio::buffer(outputBuffer_.peek(), outputBuffer_.readable()), [p, this](asio::error_code err, size_t len) {
-		//	if (err) {
-		//		LOG_ERROR("response error:%s", err.message().c_str());
-		//		return;
-		//	}
-		//	if (len == outputBuffer_.readable())
-		//	{
-		//		outputBuffer_.retrieveAll();
-		//	}
-		//	else {
-		//		outputBuffer_.retrieve(len);
-		//	}
-		//	LOG_INFO("Write complete!!, outputbuffer is : %d", outputBuffer_.readable());
-		//	OnClose();
-		//});
+			if (messageCallback_ == nullptr)
+				return;
+			messageCallback_(shared_from_this(), &inputBuffer_, Timestamp::now());
 		});
 }
 

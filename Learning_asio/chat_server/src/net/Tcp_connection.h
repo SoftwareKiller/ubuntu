@@ -17,7 +17,7 @@ namespace net {
 		~TcpConnection();
 
 		const asio::ip::tcp::endpoint& localEp() const { return local_; }
-		const asio::ip::tcp::endpoint& peerEp() const { return socket_.local_endpoint(); }
+		const asio::ip::tcp::endpoint peerEp() const { return socket_.local_endpoint(); }
 
 		bool connected() const { return state_ == kConnected; }
 		void start();
@@ -41,6 +41,8 @@ namespace net {
 		}
 
 		void send(const string& message);
+
+		void send(const char* data, size_t len);
 
 		uint64_t getId() const {
 			return connection_id_;
