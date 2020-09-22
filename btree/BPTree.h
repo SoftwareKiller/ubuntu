@@ -2,6 +2,7 @@
 #define _BTREE_H_
 
 #include <utility>
+#include <queue>
 #include <iostream>
 
 template<typename K, typename V, size_t N = 4>
@@ -31,6 +32,32 @@ public:
 		, size_(0)
 	{
 	}
+
+    ~BTree() {
+        if(!root_)
+            return;
+
+        std::queue<Node*> destroy;
+        destroy.push(root_);
+        while(!destroy.empty()) {
+            size_t level = destroy.size();
+			for (size_t start = 0; start < level; ++start) {
+				Node* pcur = destroy.front();
+				destroy.pop();
+				size_t i = 0;
+				std::cout << "one node:";
+				for (; i < N; ++i) {
+					if (pcur->subs_[i]) {
+						destroy.push(pcur->subs_[i]);
+					}
+					std::cout << pcur->kvs_[i].first << " ";
+				}
+				std::cout << std::endl;
+				delete pcur;
+				pcur = nullptr;
+			}
+        }
+    }
 
 	std::pair<Node*, int> Find(const K& key) {
 		Node* parent = nullptr;

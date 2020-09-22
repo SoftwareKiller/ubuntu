@@ -23,7 +23,7 @@ int main() {
 	bt.Insert(101);
 	bt.InOrder();*/
 
-    BTree<int, int, 16> bt;
+    BTree<int, int, 4> bt;
 	int a[] = { 53, 49, 75, 139, 145, 36, 101 };
 	for (size_t i = 0; i < sizeof(a) / sizeof(a[0]); ++i)
 	{
