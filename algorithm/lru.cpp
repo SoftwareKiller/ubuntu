@@ -2,8 +2,9 @@
 #include <iostream>
 #include <utility>
 #include <list>
+#include <string>
 #include <unordered_map>
-
+#include <map>
 
 typedef std::pair<int, int> Node;
 //hash存值需要遍历链表才能删除，可以直接存指针或迭代器
@@ -142,10 +143,53 @@ private:
     std::unordered_map<int, std::list<Node>::iterator> hash_;
 };
 
+template<typename T, size_t N = 100>
+class LRU{
+public:
+    //LRU() = default;
+    //~LRU() = default;
+
+public:
+    T get(T k) {
+        auto it = hash_.find(k);
+        if(it == hash_.end())
+            std::cout << "Not found" << std::endl;
+
+        data_.erase(it->second);
+        data_.push_front(it->first);
+        it->second = data_.begin();
+        return it->first;
+    }
+
+    void put(T k) {
+        if(size() >= capacity_)
+            return;
+
+        auto it = hash_.find(k);
+        if(it != hash_.end()){
+            data_.erase(it->second);
+            data_.push_front(it->first);
+            return;
+        }
+        data_.push_front(k);
+        hash_.insert(make_pair(k, data_.begin()));
+    }
+
+    size_t size() {
+        return data_.size();
+    }
+private:
+    const static size_t capacity_ = N;
+    std::list<T> data_;
+    //std::unordered_map<T, typename std::list<T>::iterator> hash_;
+    std::map<T, typename std::list<T>::iterator> hash_;
+    //const int errCode = -1;
+};
+
 int main()
 {
     using namespace std;
-    Node data1{9, 10}; 
+    /*Node data1{9, 10}; 
     Node data2{1, 8}; 
     Node data3{4, 5}; 
     Node data4{2, 11}; 
@@ -160,6 +204,18 @@ int main()
     cout << "lru size: " << cache.size() << " value = " << cache.get(data5.first) << endl;
     cout << "lru size: " << cache.size() << " value = " << cache.get(data4.first) << endl;
     cout << "lru size: " << cache.size() << " value = " << cache.get(data3.first) << endl;
+    */
 
+    LRU<int> buff;
+    buff.put(100);
+    buff.put(100);
+    cout << buff.get(100) << " size:" << buff.size() << endl;
+    typedef pair<int, string> node;
+    LRU<node> itBuff;
+    itBuff.put({1, "hello"});
+    itBuff.put({2, "hello"});
+    itBuff.put({3, "hello"});
+    //todo：应该支持key-val
+    cout << itBuff.get({2, "hello"}).second << " size:" << itBuff.size() << endl;
 }
 
