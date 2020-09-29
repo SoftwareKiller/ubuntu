@@ -3,11 +3,6 @@
 
 using namespace std;
 
-bool getBit(string& s, string::size_type pos)
-{
-    return s.at(pos) == '1' ? true : false;
-}
-
 string addBinary(string a, string b)
 {
     if(a.length() == 0 || (a.length() == 1 && a[0] == '0'))
@@ -20,7 +15,7 @@ string addBinary(string a, string b)
     string result = "";
 
     bool carry = false;
-    int i = 1;
+    size_t i = 1;
     while(true)
     {
         int temp = 0;
@@ -28,13 +23,13 @@ string addBinary(string a, string b)
             ++temp;
         for(; i <= a_length;)
         {
-            if(getBit(a, a_length - i))
+            if(a.at(a_length - i) == '1')
                 ++temp;
             break;
         }
         for(; i <= b_length;)
         {
-            if(getBit(b, b_length - i))
+            if(b.at(b_length - i) == '1')
                 ++temp;
             break;
         }
@@ -70,6 +65,9 @@ int main()
     string s1("1010");
     string s2("1011");
 
+    cout << addBinary(s1, s2) << endl;
+    s1 = "111111111111";
+    s2 = "1";
     cout << addBinary(s1, s2) << endl;
 }
 
