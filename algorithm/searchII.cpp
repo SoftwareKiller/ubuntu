@@ -3,27 +3,27 @@
 
 using namespace std;
 
-bool search(vector<int>& v, int target)
+int search(vector<int>& v, int target)
 {
     int l = 0, r = v.size() - 1;
     while(l <= r)
     {
         int mid = ((r-l)>>1) + l;
-        if(v[mid] == target) return true;
+        if(v[mid] == target) return mid;
 
-        if(v[mid] > v[l])
+        if(v[l] < v[mid])
         {
-            if(v[mid] > target && target >= v[l])
-                r = mid - 1;
+            if(v[l] <= target && target < v[mid])
+                r = mid;
             else
-                l = mid + 1;
+                l = mid;
         }
-        else if(v[mid] < v[r])
+        else if(v[l] > v[mid])
         {
             if(v[mid] < target && target <= v[r])
-                l = mid + 1;
+                l = mid;
             else
-                r = mid - 1;
+                r = mid;
         }
         else
         {
@@ -32,12 +32,14 @@ bool search(vector<int>& v, int target)
         }
     }
 
-    return false;
+    return -1;
 }
 
 int main()
 {
     vector<int> v{2,5,6,0,0,1,2};
     cout << search(v, 6) << endl;
+    cout << search(v, 0) << endl;
+    cout << search(v, 2) << endl;
 }
 
