@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -66,10 +67,42 @@ double findMedianSortedArrays(vector<int>& numb1, vector<int>& numb2)
     }
 }
 
+int findKth(int A[], int m, int B[], int n, int k)
+{
+    if(m > n)
+        return findKth(B, n, A, m, k);
+    if(m == 0)
+        return B[k - 1];
+    if(k == 1)
+        return min(A[0], B[0]);
+
+    int ia = min(k / 2, m), ib = k - ia;
+    if(A[ia - 1] < B[ib - 1])
+        return findKth(A + ia, m - ia, B, n, k - ia);
+    else if(A[ia - 1] > B[ib - 1])
+        return findKth(A, m, B + ib, n - ib, k - ib);
+    else
+        return A[ia - 1];
+}
+
+double findMedianSortedArraysII(int A[], int m, int B[], int n)
+{
+    int total = m + n;
+    if(total & 0x1) {
+        return findKth(A, m, B, n, (total + 1) / 2);
+    }
+    else{
+        return (findKth(A, m, B, n, total / 2) + findKth(A, m, B, n, total / 2 + 1)) / 2;
+    }
+}
+
 int main()
 {
     vector<int> v1{1, 3};
     vector<int> v2{2};
     cout << findMedianSortedArrays(v1, v2) << endl;
+    int A[] = {1, 3, 5, 7, 9, 11};
+    int B[] = {2};
+    cout << findMedianSortedArraysII(A, 6, B, 1) << endl;
 }
 
