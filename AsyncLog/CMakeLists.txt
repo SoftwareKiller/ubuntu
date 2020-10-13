@@ -1,6 +1,6 @@
 PROJECT(AsyncLog)
    
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -g -O0 -pthread")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -g -O2 -pthread")
 
 SET(SRC_LIST 
 main.cpp

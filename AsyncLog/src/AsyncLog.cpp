@@ -219,7 +219,8 @@ bool CAsyncLog::output(long nLevel, const char* pszFileName, int nLineNo, const 
     if(nLevel != LOG_LEVEL_FATAL)
     {
         std::lock_guard<std::mutex> lock_guard(m_mutexWrite);
-        m_listLinesToWrite.push_back(strLine);
+        m_listLinesToWrite.emplace_back(std::move(strLine));
+        //m_listLinesToWrite.push_back(strLine);
         m_cvWrite.notify_one();
     }
     else
@@ -493,7 +494,8 @@ void CAsyncLog::writeThreadProc()
                 m_cvWrite.wait(guard);
             }
 
-            strLine = m_listLinesToWrite.front();
+            strLine = std::move(m_listLinesToWrite.front());
+            //strLine = m_listLinesToWrite.front();
             m_listLinesToWrite.pop_front();
         }
 
