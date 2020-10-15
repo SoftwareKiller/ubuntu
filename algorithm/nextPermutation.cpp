@@ -40,19 +40,27 @@ void print(vector<int> v)
     cout << endl;
 }
 
+void nextPermutation(vector<int>::iterator begin, vector<int>::iterator end)
+{
+    next_permutation(begin, end);
+}
+
 int main()
 {
     vector<int> v{1,2,3};
     print(v);
-    nextPermutation(v);
+    nextPermutation(v.begin(), v.end());
+    //nextPermutation(v);
     print(v);
     vector<int> vv{3,2,1};
     print(vv);
-    nextPermutation(vv);
+    nextPermutation(vv.begin(), vv.end());
+    //nextPermutation(vv);
     print(vv);
     vector<int> vvv{9,8,9,7};
     print(vvv);
-    nextPermutation(vvv);
+    //nextPermutation(vvv);
+    nextPermutation(vvv.begin(), vvv.end());
     print(vvv);
 }
 
