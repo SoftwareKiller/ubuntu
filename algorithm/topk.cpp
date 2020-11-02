@@ -41,9 +41,7 @@ vector<int> topk(vector<int>& v, int k)
 
     srand(time(0));
     quick(v, 0, v.size() - 1, v.size() - k);
-    for(int i = k; i < v.size(); ++i)
-        ret.push_back(v[i]);
-    return ret;
+    return {v.begin() + (v.size() - k), v.end()};
 }
 
 void print(vector<int>& v)
@@ -55,9 +53,17 @@ void print(vector<int>& v)
 
 int main()
 {
-    vector<int> v{11,9,112,23,34,7};
+    vector<int> v;
 
-    auto ret = topk(v, 3);
+    srand(time(nullptr));
+    for(int i = 0; i < 20; ++i) {
+        int val = rand() % 200;
+        v.push_back(val);
+        cout << val << " ";
+    }
+    cout << endl;
+
+    auto ret = topk(v, 10);
 
     print(ret);
 }
