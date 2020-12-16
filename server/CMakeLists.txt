@@ -1,6 +1,0 @@
-PROJECT(SERVER)
-
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -g -O0 -pthread")
-
-ADD_SUBDIRECTORY(src bin)
-

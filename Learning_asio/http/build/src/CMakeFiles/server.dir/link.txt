@@ -1,1 +1,0 @@
-/usr/bin/c++    -std=c++0x -g -Wall -O0 -Wno-unused-variable -pthread -D_GLIBCXX_USE_CXX11_ABI=0 -D_WIN32_WINNT=0x0501   CMakeFiles/server.dir/main.cpp.o  -o server -rdynamic 
