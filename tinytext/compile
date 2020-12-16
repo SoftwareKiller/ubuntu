@@ -1,0 +1,2 @@
+gcc -c -fno-builtin -m32 HelloWorld.c
+ld -static -m elf_i386 -e start -o HelloWorld HelloWorld.o
