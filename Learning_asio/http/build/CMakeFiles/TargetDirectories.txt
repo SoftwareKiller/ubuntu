@@ -1,0 +1,5 @@
+/home/zym/cpp/asio/net/d1/build/CMakeFiles/edit_cache.dir
+/home/zym/cpp/asio/net/d1/build/CMakeFiles/rebuild_cache.dir
+/home/zym/cpp/asio/net/d1/build/src/CMakeFiles/edit_cache.dir
+/home/zym/cpp/asio/net/d1/build/src/CMakeFiles/rebuild_cache.dir
+/home/zym/cpp/asio/net/d1/build/src/CMakeFiles/server.dir
