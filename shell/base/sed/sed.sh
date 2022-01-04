@@ -1,4 +1,4 @@
 # /bin/bash
 
-sed -i "" "s/xx/xx/g" `grep zhang -rl .`
+sed -i "" "s/ddd/ddd/g" `grep "ddd" -rl .`
 
